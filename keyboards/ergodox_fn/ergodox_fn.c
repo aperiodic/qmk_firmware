@@ -124,12 +124,6 @@ const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
 };
 #endif
 
-#ifdef ORYX_CONFIGURATOR
-bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
-    return process_record_user(keycode, record);
-}
-#endif
-
 void eeconfig_init_kb(void) {  // EEPROM is getting reset!
     keyboard_config.raw               = 0;
     keyboard_config.led_level         = 4;
@@ -138,11 +132,6 @@ void eeconfig_init_kb(void) {  // EEPROM is getting reset!
     eeconfig_init_user();
 }
 
-#ifdef ORYX_ENABLE
-static uint16_t loops = 0;
-static bool is_on = false;
-#endif
-
 #ifdef DYNAMIC_MACRO_ENABLE
 static bool is_dynamic_recording = false;
 static uint16_t dynamic_loop_timer;
@@ -150,7 +139,6 @@ static uint16_t dynamic_loop_timer;
 void dynamic_macro_record_start_user(void) {
     is_dynamic_recording = true;
     dynamic_loop_timer = timer_read();
-    ergodox_right_led_1_on();
 }
 
 void dynamic_macro_record_end_user(int8_t direction) {
@@ -160,18 +148,5 @@ void dynamic_macro_record_end_user(int8_t direction) {
 #endif
 
 void matrix_scan_kb(void) {
-#ifdef DYNAMIC_MACRO_ENABLE
-    if (is_dynamic_recording) {
-        ergodox_right_led_1_off();
-        // if (timer_elapsed(dynamic_loop_timer) > 5)
-        {
-            static uint8_t counter;
-            counter++;
-            if (counter > 100) ergodox_right_led_1_on();
-            dynamic_loop_timer = timer_read();
-        }
-    }
-#endif
-
     matrix_scan_user();
 }
