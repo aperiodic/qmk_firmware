@@ -34,12 +34,10 @@ void matrix_init_kb(void) {
     DDRB &= ~(1 << 4);   // set B(4) as input
     PORTB &= ~(1 << 4);  // set B(4) internal pull-up disabled
 
-    // unused pins - C7, D4, D5, D7, E6
+    // unused pins - D4, D5, D7, E6
     // set as input with internal pull-up enabled
-    DDRC &= ~(1 << 7);
     DDRD &= ~(1 << 5 | 1 << 4);
     DDRE &= ~(1 << 6);
-    PORTC |= (1 << 7);
     PORTD |= (1 << 5 | 1 << 4);
     PORTE |= (1 << 6);
 
@@ -75,7 +73,7 @@ uint8_t init_mcp23018(void) {
         if (mcp23018_status) goto out;
     mcp23018_status = i2c_write(0b00000000, ERGODOX_FN_I2C_TIMEOUT);
         if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00111111, ERGODOX_FN_I2C_TIMEOUT);
+    mcp23018_status = i2c_write(0b01111111, ERGODOX_FN_I2C_TIMEOUT);
         if (mcp23018_status) goto out;
     i2c_stop();
 
@@ -89,7 +87,7 @@ uint8_t init_mcp23018(void) {
     if (mcp23018_status) goto out;
     mcp23018_status = i2c_write(0b00000000, ERGODOX_FN_I2C_TIMEOUT);
     if (mcp23018_status) goto out;
-    mcp23018_status = i2c_write(0b00111111, ERGODOX_FN_I2C_TIMEOUT);
+    mcp23018_status = i2c_write(0b01111111, ERGODOX_FN_I2C_TIMEOUT);
     if (mcp23018_status) goto out;
 
 out:

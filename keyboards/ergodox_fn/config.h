@@ -32,15 +32,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 14
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
-#define MATRIX_COLS 6
+#define MATRIX_COLS 7
 
+// these are the rows that are scanned on the MCP instead of on the AVR
 #define COL_EXPANDED { true, true, true, true, true, true, true, false, false, false, false, false, false, false }
 #define MATRIX_ONBOARD_ROW_PINS { 0, 0, 0, 0, 0, 0, 0, B0,  B1,  B2,  B3,  D2,  D3,  C6 }
-#define MATRIX_ONBOARD_COL_PINS { F0,  F1,  F4,  F5,  F6,  F7 }
+#define MATRIX_ONBOARD_COL_PINS { C7, F0,  F1,  F4,  F5,  F6,  F7 }
 #define DIODE_DIRECTION COL2ROW
 #define EXPANDER_COL_REGISTER GPIOB
 #define EXPANDER_ROW_REGISTER GPIOA
-#define MATRIX_EXPANDER_COL_PINS { 5, 4, 3, 2, 1, 0 }
+#define MATRIX_EXPANDER_COL_PINS { 6, 5, 4, 3, 2, 1, 0 }
 #define MATRIX_EXPANDER_ROW_PINS { 0, 1, 2, 3, 4, 5, 6 }
 
 #define MOUSEKEY_INTERVAL           20

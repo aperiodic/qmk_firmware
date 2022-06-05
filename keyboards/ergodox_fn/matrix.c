@@ -111,16 +111,15 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
 /* Column pin configuration
  *
  * Teensy
- * col: 0   1   2   3   4   5
- * pin: F0  F1  F4  F5  F6  F7
+ * col: 0  1   2   3   4   5   6
+ * pin: C7 F0  F1  F4  F5  F6  F7
  *
- * MCP23018
- * col: 0   1   2   3   4   5
- * pin: B5  B4  B3  B2  B1  B0
+ * MCP23018 -- mcp bits are in _opposite_ order of teensy bits?
+ * col: 0   1   2   3   4   5   6
+ * pin: B6  B5  B4  B3  B2  B1  B0
  */
 static void init_cols(void) {
-    // init on mcp23018
-    // not needed, already done as part of init_mcp23018()
+    // init on mcp23018 not needed, already done as part of init_mcp23018()
 
     // init on teensy
     setPinInputHigh(F0);
@@ -129,6 +128,7 @@ static void init_cols(void) {
     setPinInputHigh(F5);
     setPinInputHigh(F6);
     setPinInputHigh(F7);
+    setPinInputHigh(C7);
 }
 
 static matrix_row_t read_cols(uint8_t row) {
@@ -147,16 +147,22 @@ static matrix_row_t read_cols(uint8_t row) {
             mcp23018_status = I2C_STATUS_SUCCESS;
         out:
             i2c_stop();
+            // TODO: this might be the place to fix incorrect row ordering
+            // have the bits like this:
+            // 6543210
+            // need to look at schematic again
+            // does pin b5 connect to top or bottom row?
             return data;
         }
     } else {
-        /* read from teensy
-         * bitmask is 0b11110011, but we want those all
-         * in the lower six bits.
-         * we'll return 1s for the top two, but that's harmless.
-         */
-
-        return ~((PINF & 0x03) | ((PINF & 0xF0) >> 2));
+        // Read from teensy. Bitmask is 0b01111111 (everything but the high bit)
+        // The first bit is C7, our fn row pin
+        // The rest are in the F block, starting with the first two, then
+        // skipping the next two (F2 & F3) to the top four (F5-F7)
+        // (F5-F7). We shift the first two F pins up one to make room for C7 as
+        // bit 0, which means we want the top four F pins to be bits #3 through
+        // #7. That's a difference of one bit down, which is our final shift
+        return ~(((PINC & 0x80) >> 7) | (PINF & 0x03) << 1 | ((PINF & 0xF0) >> 1));
     }
 }
 
