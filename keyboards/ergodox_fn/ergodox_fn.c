@@ -70,13 +70,13 @@ uint8_t init_mcp23018(void) {
     // - input   : input  : 1
     // - driving : output : 0
     mcp23018_status = i2c_start(I2C_ADDR_WRITE, ERGODOX_FN_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
+        if (mcp23018_status) goto out;
     mcp23018_status = i2c_write(IODIRA, ERGODOX_FN_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
+        if (mcp23018_status) goto out;
     mcp23018_status = i2c_write(0b00000000, ERGODOX_FN_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
+        if (mcp23018_status) goto out;
     mcp23018_status = i2c_write(0b00111111, ERGODOX_FN_I2C_TIMEOUT);
-    if (mcp23018_status) goto out;
+        if (mcp23018_status) goto out;
     i2c_stop();
 
     // set pull-up
